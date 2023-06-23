@@ -1,0 +1,797 @@
+Version Contral System.
+
+Token passwd for git.com/pvasbob:
+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
+
+The command line
+Code editors & 
+GUIGit Kraken Git GUI
+
+
+SETTINGS:
+NAME
+Email
+Default Editor
+Line Ending
+
+SYSTEM: All users
+GLOBAL: All repositories of the current user
+Local:  The current repository
+
+
+$git config --global user.name "qql"
+$git config --global user.email pvasbob@gmail.com
+$git config --global core.editor "code --wait"  # set default editor and waiti until we close the opened window, notice here is window, not vscode. 
+$git config --global -e     # open the global configuration file. 
+
+
+EOL:
+WINDOWS: \r\n --> Carriage Return and Line feed.
+macOS/Linux: \n --> Line feed. 
+
+
+git config --global core.autocrlf input
+#To configure EOL, we need to configure file core.autocrlf, on macOS/Linux, set to 'input'. On Windows set to 'true'.
+
+
+$git config a --help
+# get detailed help
+
+$git config -h
+#get short summary for help
+
+
+
+$git init
+# initialized empty Git repository .git
+
+
+Project directory       Staging Area/Index      Repository
+
+
+$ git add . 
+# add entire directory recursively. 
+
+
+$ git status
+# check status of project directory, staging area and repository. 
+
+
+$ git commit -m "XXX"
+# commit from staging area to repository, with short description XXX
+
+
+$ git commit 
+# comiit from staging area to repository, also open default editor to edit commit_editmsg to include a detailed description. 
+
+
+$ git commit -a -m  "XXX"  
+# commit currently working directory without staing. 
+
+
+$ git ls-files
+# show all the files in staging ares.
+
+
+
+$ git rm filenames
+# rm filenames from both working directory and as well as the staging area.
+
+
+$ git mv file1 file2
+# mv file1 to file2 in both working directory and as well as in staging area. 
+
+
+.gitignore
+# This file has no name. It only has extension, and it has to be in the root directory of project. Its content is all the files we don't want to stage or  commit. One file/type per line.
+
+
+With .gitignore, the command 'git status' will no longer show the changing of files included in .gitignore.  This only works if we haven't already include a file or directory in reporsitory. In other words, if we accidently include a file in repository, and then later add it to .gitignore, git is NOT going to ignore that. 
+
+
+Any file that is already commited in repostory will be tracked, no matter if we add this naem of this file later into .gitignore. To solve this problem, we have to remove the file from the STAGING AREA. How? use the 'git rm file' command, because it remove the file both from the workinig directory and staging area, but not exactly 'git rm ' as shown below:
+
+$ git rm --cached -r directory/file
+# rm directory recursively or file only from staginig area. The file in working directory will not be touched.    --cached means only from staging area. 
+
+
+https://github.com/github/gitignore
+# .gitignore file for different programming language. 
+
+
+
+$ git status -s 
+# Two columns: 
+    left column : staging area
+    right column: working directory.
+ As to what M, A, ? and their color means refer to Mosh course Creating Snapshorts/Short Status.
+
+
+$ git diff --staged
+# show what is going to be committed into repository in staging area. 
+# That is, comparing the difference between the very last snapshort in repository and staging area.
+
+
+diff --git a/file1.js b/file1.js   #comparing the old a/file.js with the new b
+index a4c99d9..b2824e0 100644      #meta data doesn't matter. 
+--- a/file1.js                     #changes of old copy indicated by '-'
++++ b/file1.js                     #hcanges of new copy indicated by '+'
+@@ -1,2 +1,4 @@     # -1,2 old copy, starting from line 1, extract 2 lines
+ world              # +1,4 new copy, starting from line 1, extract 4 lines
+ test
++sky                # '+' means in new copy. color green means newly added in
++ocean              # staging area.
+diff --git a/file2.js b/file2.js
+new file mode 100644
+index 0000000..f5e95e7
+--- /dev/null
++++ b/file2.js
+@@ -0,0 +1 @@       # -0,0 means starting from line 0 and 0 lines extracted, 
++sky                # becuase there is no old copy. 
+# example of git diff -staged
+
+
+
+$ git diff
+# show the difference between working directory and staging area. 
+
+
+DIFF TOOLs
+1.KDiff3
+2. P4Merge
+3. WinMerge(Windows Only)
+4. VSCode
+
+
+
+$ git config --global diff.tool vscode 
+$ git config --global difftool.vscode.cmd "code --wait --diff $LOCAL $REMOTE" # set vscode as the diff tool globally, i.e.apply for all our repositories. 
+# LOCAL and REMOTE are place holders for old and new copies of files. 
+
+
+
+$ git difftool
+# show the changes between working directory and staging area. 
+
+
+$ git difftool --staged
+# show the changes between repository and staging area. 
+
+
+
+$ git log 
+# show commit history. 
+# 'master' is the main branch or main line of work in git. 
+# 'HEAD' is a reference to the current branch. This is how git knows what branch we are currently working on. 
+
+
+$ git log --oneline
+# shows a short summary of the commits. 
+
+
+$ git log --oneline --reverse
+#oldest on top. 
+
+
+
+$ git show HEAD
+# view the changes of the last commit.
+
+
+$ git show HEAD~x
+# view the changes of previous x commit. 
+
+
+
+$ git show HEAD~x:filepath-to-x
+# show the content instead of difference of a commit.
+
+
+$ git ls-tree HEAD~X
+# show all the files in x commit. 
+
+
+ blob: files
+ tree: directories
+
+
+$ git show 64629
+# based on te output of 'git ls-tree HEAD~X'.
+
+
+
+There are two ways to show the full content of a file:
+$ git show HEAD~x:filepath-to-x
+OR
+$ git ls-tree HEAD-x
+$ git show 64629
+
+
+
+$ git restore --staged file1
+# restore file1 in staing area based on the last commit.
+# If a file does not exists in last commit, this command is going to delete the file in staging area.
+
+
+$ git restore file1
+# restore file1 in working directory based on the file1 in staging area. 
+# If staging area does not have file1, git is not going to do anything, which is totally different from the last command in this situation. 
+# To remeber, 'git restore' can restore files , but it can not delete files in working directory.  This is easy to understand, otherwise it would be a disastor if 'git restore' can delete files in working directory, we would lose all information of this file. 
+
+
+
+
+$ git clean -df 
+# force to move untracked files and directroies(-d)
+
+
+
+$ git restore --source=HEAD~1 file1  
+# restore  file1 from the commit before the last one.
+
+
+stage and unstage a file via VScode:
+1.first we need to open the git project root directory in VScode. 
+2. '+' to stage the file.  '-' to unstage the file. 
+3. choose a file, click 'TIMELINE' on bot left corner to show all the commits and changes.
+
+
+
+
+GitKraken
+https://help.gitkraken.com/gitkraken-client/how-to-install/
+OR
+snapcraft.io        then search for gitkraken
+
+
+
+$ git log --oneline --stat
+# show the files that has been changed. 
+
+
+
+$ git log --stat
+# show changes with details for each commit. 
+
+
+
+$ git log --oneline --patch
+# show actually changes in each commit. 
+
+
+
+$ git log --oneline -3
+# show the last 3 commits.
+
+
+
+$ git log --oneline --author="Mosh"
+# show all the commits with author's name including "Mosh".
+
+
+
+$ git log --oneline --after="2020-08-17"
+# show all the commits start from 2020-08-17
+
+
+
+$ git log --oneline --after="yesterday"
+# show all the commits from yesterday.
+
+
+
+
+$ git log --oneline --after="one week ago"
+# show all the commits from one week ago.
+
+
+
+$ git log --oneline --grep="GUI"
+# show all the commits which includes 'GUI' inside description. 
+
+
+
+
+$ git log --oneline -S"OBJECTIVES"
+# show all the commits which added or removed "OBJECTIVES".
+
+
+
+$ git log --oneline -S"OBJECTIVES" --patch
+# show the changes of  all the commits which added or removed "OBJECTIVES".
+
+
+
+$ git log --oneline fb0d184..edb3594
+# show all the commits between fb0d184 to edb3594
+
+
+
+$ git log --oneline --  file1
+# show all the commits that have modified file1.
+
+
+
+
+$ git log --oneline --patch  --  file1
+# show the actual changes of all the commits that have modified file1
+
+
+
+$ git log --pretty=format:"%an committed %h"
+# show the name and the abbrevited commit hash.
+
+
+
+$ git log --pretty=format:"%an committed %h on %cd"
+# %an name
+# %h  abbreviated
+# %cd committed date.
+
+
+
+$ git log --pretty=format:"%Cgreen%an%Creset committed %h %cd"
+# %Cgreen   set color to green
+# %an       name
+# %Creset   reset color
+# %h        abbreviated
+# %cd       committed date.
+
+
+
+$ git config --global alias.lg "log --pretty=format:'%an committed %h'"
+# set 'lg' as alias to the command....
+# after this we can always add or modify alias in gloal config file via:
+# git config --global -e
+
+
+
+$ git show HEAD~2 --name-only
+# show only the modifiedy file in HEAD~2, 
+
+$ git show HEAD~2:sections/creating-snapshots/staging-changes.txt 
+# show the full content of this file by path.
+
+
+$ git show HEAD~2 --name-status
+# show the files and if they are modified, added or deleted.
+
+
+$ git diff HEAD~2 HEAD --name-status
+# show files in commits which has been modified, deleted or added.
+# compare between commits, not commit and staging area.
+
+
+
+
+$ git checkout dad47ed
+# attach the HEAD pointer to commit 'dad47ed'
+
+
+
+$ git checkout master
+# attach the HEAD pointer to master branch
+# only when HEAD attached to master branch we can create new commits. 
+# Mosh course -> Browsing History -> check out a commit.
+
+
+
+
+  Bisect 
+# a powerful tool to find bugs
+
+
+
+Mosh The Ultimate Git course -> Browsing History ->  finding Bugs using Bisect 
+
+
+
+$ git shortlog -n -s -e
+# find the most active contributor
+
+
+
+$ git log --oneline file1
+# show shortly the commits that touch file1.
+
+
+
+$ git log --oneline --stat  file1
+# show  the commits that touch file1, how many changes are there.
+
+
+
+$ git log --oneline --stat --patch  file1
+# show in detail the changes made to file1 for every commit that touch file1.
+
+
+
+Recover a deleted file from history.
+$ git rm file1
+$ git checkout a642e12 file1
+$ git status -s
+$ git commit -m "Restore file1"
+
+
+
+$ git tag v1.0 c955e70
+$ attach a tag on this commit.
+
+
+$ git checkout v1.0
+# use tag to checkout 
+# tag can be used as hash
+
+
+$ git tag
+# show all the tag we have created.
+
+
+
+$ git tag -d v1.1
+# delete tag v1.1
+
+
+
+
+Borwsing History Using VSCode  -> need install GitLens extension. 
+
+
+
+Branch in Git is just a pointer to a commit. 
+When we create a new branch, git creates a new pointer that can be moved around. 
+How does git know which branch we are working on? Using a special pointer called 'HEAD'.
+
+
+$ git branch bugfix
+# create branch bugfix based on the current branch.
+
+
+$ git branch
+# show list of branch
+# the one with * ahead is the branch we are working on.
+
+
+
+$ git status
+# anothe way to show which branch we are working on. 
+
+
+
+$ git checkout bugfix
+$ git switch bugfix
+# two ways to change branch
+
+
+
+$ git branch -m buffix bugfix-signup-form
+# change branch name from bugfix to bugfix-signup-form
+
+
+
+##########################
+##  install zsh on ubuntu and configure prompt, powerline fonts.
+##########################
+https://www.youtube.com/watch?v=PZTLIVQxxEY
+######################### finish
+
+
+
+$ git log master..bugfix-signup-from
+# show all the commits that are in bugfix branch and not in master. 
+
+
+$ git diff master..bugfix-signup-form
+# show difference between master branch and bugfix branch
+
+
+
+
+Q: git command output is in editor and not directly to terminal output.
+A: It is a default behavior change introduced in git 2.1.16. 
+ : Use the command below to fix:
+ : git config --global pager.branch false
+R: https://stackoverflow.com/questions/50525244/git-command-output-is-in-editor-vim-and-not-directly-to-terminal-output
+S: the command only fix branch output. To fix diff we need pager.diff. Same as other command. 
+
+
+
+Git won't allow us switch brancah during modifying working directory in case we lose information.  
+
+
+$ git stash push -m "message"
+# push tracked modified file to stash.
+
+
+$ git stash push -a -m "message"
+# push untracked modified file to stash.
+
+
+$ git stash show
+# show all the stash
+
+
+$ git stash show stash@{1}
+# show the changes of stash1
+
+$ git stash apply 1
+# apply stash 1 to working directory.
+$ git stash drop 1
+# remove stash 1 after apply
+$ git stash clear
+# remove all stash
+
+
+
+Mergeing: bring changes from one branch to another. 
+Two types:
+    Fast-forward merges
+    3-way merges
+
+
+To bring the changes from bug-fix branch to master branch:
+First we need to be on master branch. Then
+$ git merge bug-fix
+# use the fast forward method to merge bug-fix into master
+
+
+
+$ git merge --no-ff bug-fix
+# use NO-fast forward method to merge bug-fix into master.  Creatge a merge commit that combine all the changes in the branch and bring them into master. 
+
+
+$ git config ff no
+# disable fast forward only in the currently repos
+$ git config --global  ff no
+# disable fast forward in all repos
+
+
+$ git merge feature-change-passwd
+# command in master branch to do a 3-way merge: the currently master, the previous master, and the feature, and create a new master. 
+
+
+
+$ git branch --merged
+# review the branches merged into master.
+$ git branch -d bug 
+
+
+
+$ git branch -d bugfix-signup-form
+# delete this branch, but the commits are still there.
+
+
+
+$ git branch --no-merged
+# show branches that have not been merged into master.
+
+
+  merge conflcits:
+1.Same amount of code has been changed in different ways in two branches. 
+2.A given file is changed in one branch, but deleted in another branch.
+3.Same file are added in two different branches, but the contents of the files
+    are different. 
+
+
+
+
+Merge Tools
+Kdiff
+P4Merge
+WinMerge(Window Only)
+
+
+$ git config --global merge.tool p4merge
+$ git config --global mergetool.p4merge.path  "/opt/p4merge/bin/p4merge"
+
+$ git merge bugfix-branch
+# merge bugfix-branch with the current master, or show merge conflicts.
+
+
+$ git mergetool
+# show in p4merge the merge conflicts.
+
+
+
+$ git merge --abort
+# go back to the state before we start the merge. 
+
+
+
+$ git reset --hard HEAD~1        
+# soft  head point points to a different sanpshort, staging area and working dir not affect.
+# mixed same as soft but staging area is changed to the current commit which head points. Working directory still not affected. 
+# hard  same as mixed just working directory is changed to the current commit as well.
+
+
+0999c2d
+a commit exists in 'history' and 'repository'
+# history is more like a record, and repository a storage. 
+
+
+$ git reset --hard 0999c2d
+# back to the commit which deleted from history ( but still exists in repository)
+
+
+$ git revert -m 1 HEAD
+# '-m 1' means the first parent
+# 'HEAD' is the target commit which we try to revert. 
+# The difference between reset and revert is, reset delete history record and does not change repository, while revert add 'new' commit to hisotyr and repository. 'new' because this is a copy of some parent commit, which is not really new, just with a new name.  
+
+
+$ git merge --squash bugfix-photo-upload
+# combine commits and stage them, but not committed.
+# this command need to be on the master branch. This is more like woring on the master branch directory. We do the same thing on the master branch as we did in the bugfix-photo-upload branch.
+# this is NOT merge, even though we do have something in staging area of master branch very similar to the branch bugfix-photo-upload. 
+# This is not a merge, which means this branch will be show up for command 'git branch --no-merged' ( the command which shows the not yet merged branches, which waits to be merged.). This means we need to delete this branch from history, otherwise it will cause confusion because it is actually 'merged', just not in a formal mergeing way. It is a squashing merge. 
+
+
+
+Bring changes from one branch to anotherr: Rebasing. 
+# Rebasing rewrite history, which is not a good way to do 'merge'. 
+
+
+
+$ git config --global mergetool.keepBackup false
+# merge tool does not create backup files. 
+
+
+
+$ git chery-pick  3937ca7
+# bring a paticular commit 3937ca7 into master without merging a whole branch. This usually happend when we find one commit in a branch has very good changes and just wnt to commit this particular commit into master. 
+# This command needs to be executed in current branch which you want to bring into.
+# If conflicts happen just use mergetool too solve. 
+
+
+$ git restore --source=feature-send-email  -- toc.txt
+# bring a given FILE toc.txt from another branch to the current branch. 
+# If there a there are many commits in another branch which have toc.txt, git will pick the lasted commit which has the toc.txt.
+
+
+
+
+$ git remote
+# shows the list of remote repositories. remote repositories is a repository that is not on our machine, more accurately, it's not in the current directory. 
+
+
+
+$ git remote -v
+# shows the URL when we talk to the remote repository.
+
+
+$ git fetch origin 
+# fetch all the commits in the remote repository.( becuase remote repository might have new commits which our local repository doesn't have, or new branch we our lcoal repository doesn't have.  
+
+
+
+$ git fetch origin branch
+# fetch commits from the specified branch.
+
+
+$ git branch -vv
+# shows how our local commit and remote tracking branch are diverigng.
+
+
+
+# bring the changes from the remote repository to our local repository most of the time we need to do  'fetch + merge'.  a 'pull' commend is a combination of the 'fetch + merge'. 
+
+
+$ git push origin main
+# git send new commit to remote repository. 
+# github might reject our push because the branch in github has been updated by someone else: our history has envolved differently. 
+# what can we do? : 'git pull' to bring other's work into our local repository, then we need to do a merge or rebase, then we can push.  Notice after push the remote repository will be the EXACTLY the same as our local repository. 
+
+
+
+$ git config --global credential.helper cache
+# store credential in memory 15mins.  
+# To store credential permanently:
+    Mac: Keychain
+    Windows: Windows Credential Store
+    
+
+# by default the push command doesn't transfer our tags to our remote repository. We have explicitly push them. 
+
+
+$ git tag v1.0
+# attach tag v1.0 to the last commit in this branch. 
+
+$ git push origin v1.0
+# push tag v1.0 to github. 
+
+
+$ git push origin --delete v1.0
+# delete tag v1.0 from origin, but this tag is still in our repository.
+
+$ git tag -d v1.0
+# delete tag v1.0 from local repository.
+
+
+
+$ git branch -vv
+# show how local branches are linked to remote branches. 
+
+$ git branch -r 
+# show all remote branch
+
+
+$ git push -u origin feature-change-password
+# push branch to remote repository, if this branch does not have a corresponding branch in remote.
+
+
+$ git push -d origin feature-change-password 
+# delete branch in remote repository. 
+
+
+
+$ git branch -d feature-change-password 
+# delete branch in local repository.
+
+
+$ git fetch
+# get new branch from remote repository.
+$ running 'git fetch' we only get a remote tracking branch.
+
+$ git switch -C feature-change-password origin/feature-change-password 
+# create in local repository a branch that mapps this remote tracking branch.  
+
+
+$ git remote prune origin
+# prune remote tracking branch.
+
+
+
+$ git config --global credential.helper cache
+# store token in git for 15mins
+
+
+
+# Add release on github 
+
+
+$ git config user.name 
+$ git config user.email
+# show the user information of current git repos.
+$ git remote show origin
+# show the push and pull url information. 
+
+
+# Create personal access token:
+1. setting
+2. developer setting
+3. personal access tokens
+4. tokens(classic)
+5. ...
+
+
+
+Q How to update fork repos? 
+A Our local repos already have reference to fock repos. We can add another reference which points to the base repos and then use the pull command to bring in to new commit, and then we can push them to the fork repos.  
+
+
+$ git remote -v 
+# show the URL which our local repos related to.
+$ git remote add base https://github.com/base/repos
+# add the base URL which is named 'base' here.
+# This can be shown by 'git  remote -v'
+$ git remote rename base upstream
+# rename 'base' to 'upstream'.
+# This can be shown again by 'git remote -v'
+$ git remote rm base
+# delete base( or upstream, or whatever renamed one) after we are done with the update.
+$ git fetch base 
+# fetch the new commit from base repos into our local repos.
+$ git push origin
+# push the downloaded commit into our forked repos, so that our focked repos is up to date with the base repos. 
+
+
+
+
+
+$ git reset --soft HEAD~1   # remove commit only
+$ git reset --mixed HEAD~1  # Unstages files
+$ git reset --hard HEAD~1   # Discards local changes
+
+
+
+
